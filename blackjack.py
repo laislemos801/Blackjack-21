@@ -10,8 +10,12 @@ def sort_initial_cards() -> list[int]:
 
     return chosen_cards
 
-def sum_cards(cards: list[int]) -> int:
-    return sum(cards)
+def sum_cards(hand: list[int]) -> int:
+    total = sum(hand)
+    while total > 21 and 11 in hand:
+        hand[hand.index(11)] = 1
+        total = sum(hand)
+    return total
 
 def get_another_card(current_cards: list[int]) -> list[int]:
     new_card = random.choice(cards)
@@ -66,6 +70,11 @@ while keep_playing:
         clear()
         print(logo)
 
+        user_cards = []
+        computer_cards = []
+        user_sum = 0
+        computer_sum = 0
+
         user_cards = sort_initial_cards()
         computer_cards = sort_initial_cards()
 
@@ -83,7 +92,7 @@ while keep_playing:
                 new_cards = get_another_card(user_cards)
                 user_sum = sum_cards(new_cards)
 
-                if user_sum > 21 or computer_sum > 21:
+                if user_sum > 21:
                     check_winner(user_cards, user_sum, computer_cards, computer_sum)
                     keep_getting_cards = False
 
