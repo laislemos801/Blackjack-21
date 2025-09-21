@@ -1,3 +1,4 @@
+import os
 import random
 from art import logo
 
@@ -10,17 +11,13 @@ def sort_initial_cards() -> list[int]:
     return chosen_cards
 
 def sum_cards(cards: list[int]) -> int:
-    sum = 0
-    for card in cards:
-        sum += card
+    return sum(cards)
 
-    return sum
-
-def get_another_card(cards: list[int]) -> list[int]:
+def get_another_card(current_cards: list[int]) -> list[int]:
     new_card = random.choice(cards)
-    cards.append(new_card)
+    current_cards.append(new_card)
 
-    return cards
+    return current_cards
 
 def print_final_hands(user_cards: list[int], user_sum: int, computer_cards: list[int], computer_sum: int):
     print(f"     Your final hand: {user_cards}, final score: {user_sum}")
@@ -33,30 +30,40 @@ def check_winner(user_cards: list[int], user_sum: int, computer_cards: list[int]
 
     if user_sum > 21:
         print_final_hands(user_cards, user_sum, computer_cards, computer_sum)
-        print("You went over. You lose :(")
+        print("\nYou went over. You lose :(")
 
     elif computer_sum > 21:
         print_final_hands(user_cards, user_sum, computer_cards, computer_sum)
-        print("Opponent went over. You win :)")
+        print("\nOpponent went over. You win :)")
 
     elif user_sum == computer_sum:
         print_final_hands(user_cards, user_sum, computer_cards, computer_sum)
-        print("It's a Draw!")
+        print("\nIt's a Draw!")
 
     elif user_sum > computer_sum:
         print_final_hands(user_cards, user_sum, computer_cards, computer_sum)
-        print("You win! :)")
+        print("\nYou win! :)")
 
     elif user_sum < computer_sum:
         print_final_hands(user_cards, user_sum, computer_cards, computer_sum)
-        print("You lose :(")
+        print("\nYou lose :(")
 
     else:
         None
 
+def clear():
+    # Windows
+    if os.name == 'nt':
+        os.system('cls')
+    # Mac/Linux
+    else:
+        os.system('clear')
+
 while keep_playing:
     user_choice = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
+
     if user_choice == 'y':
+        clear()
         print(logo)
 
         user_cards = sort_initial_cards()
@@ -69,28 +76,29 @@ while keep_playing:
         print(f"     Computer's first card: {computer_cards[0]}")
 
         keep_getting_cards = True
-        
+
         while keep_getting_cards:
             another_card = input("\nType 'y' to get another card, type 'n' to pass: ")
             if another_card == 'y':
                 new_cards = get_another_card(user_cards)
                 user_sum = sum_cards(new_cards)
 
-                print(f"     Your cards: {user_cards}, current score: {user_sum}")
-                print(f"     Computer's first card: {computer_cards[0]}")
-
-                if user_sum or computer_sum > 21:
+                if user_sum > 21 or computer_sum > 21:
                     check_winner(user_cards, user_sum, computer_cards, computer_sum)
                     keep_getting_cards = False
+
+                else:
+                    print(f"     Your cards: {user_cards}, current score: {user_sum}")
+                    print(f"     Computer's first card: {computer_cards[0]}")
 
             elif another_card == 'n':
                 check_winner(user_cards, user_sum, computer_cards, computer_sum)
                 keep_getting_cards = False
             else:
-                print("What you typed is not an option. Try again.")
+                print("\nWhat you typed is not an option. Try again.\n")
 
     elif user_choice == 'n':
         keep_playing = False
 
     else:
-        print("What you typed is not an option. Try again.")
+        print("\nWhat you typed is not an option. Try again.\n")
