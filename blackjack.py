@@ -3,7 +3,6 @@ from art import logo
 
 cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 keep_playing = True
-keep_getting_cards = True
 
 def sort_initial_cards() -> list[int]:
     chosen_cards = random.choices(cards, k=2)
@@ -48,9 +47,12 @@ def check_winner(user_cards: list[int], user_sum: int, computer_cards: list[int]
         print_final_hands(user_cards, user_sum, computer_cards, computer_sum)
         print("You win! :)")
 
-    else:
+    elif user_sum < computer_sum:
         print_final_hands(user_cards, user_sum, computer_cards, computer_sum)
         print("You lose :(")
+
+    else:
+        None
 
 while keep_playing:
     user_choice = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
@@ -66,6 +68,8 @@ while keep_playing:
         print(f"     Your cards: {user_cards}, current score: {user_sum}")
         print(f"     Computer's first card: {computer_cards[0]}")
 
+        keep_getting_cards = True
+        
         while keep_getting_cards:
             another_card = input("\nType 'y' to get another card, type 'n' to pass: ")
             if another_card == 'y':
@@ -75,14 +79,16 @@ while keep_playing:
                 print(f"     Your cards: {user_cards}, current score: {user_sum}")
                 print(f"     Computer's first card: {computer_cards[0]}")
 
+                if user_sum or computer_sum > 21:
+                    check_winner(user_cards, user_sum, computer_cards, computer_sum)
+                    keep_getting_cards = False
+
             elif another_card == 'n':
                 check_winner(user_cards, user_sum, computer_cards, computer_sum)
                 keep_getting_cards = False
             else:
                 print("What you typed is not an option. Try again.")
 
-        check_winner(user_cards, user_sum, computer_cards, computer_sum)
-        
     elif user_choice == 'n':
         keep_playing = False
 
